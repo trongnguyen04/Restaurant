@@ -32,10 +32,9 @@ namespace RM.View
             lb.Items.Add(dgvPhone);
             lb.Items.Add(dgvRole);
 
-
             MainClass.LoadData(qry, guna2DataGridView1, lb);
 
-        }
+        } 
         public override void btnAdd_Click(object sender, EventArgs e)
         {
             MainClass.BlurBackground(new Model.frmStaffAdd());
@@ -70,7 +69,7 @@ namespace RM.View
                 if (guna2MessageDialog1.Show("Are you sure you want to delete?") == DialogResult.Yes)
                 {
                     int id = Convert.ToInt32(guna2DataGridView1.CurrentRow.Cells["dgvid"].Value);
-                    string qry = "Delete from products where pID= " + id + "";
+                    string qry = "Delete from staff where staffID= " + id + "";
                     Hashtable ht = new Hashtable();
                     MainClass.SQl(qry, ht);
                     guna2MessageDialog1.Icon = Guna.UI2.WinForms.MessageDialogIcon.Information;

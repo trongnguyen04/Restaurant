@@ -17,6 +17,7 @@ namespace RM.Model
         {
             InitializeComponent();
         }
+
         public int id = 0;
 
         private void frmStaffAdd_Load(object sender, EventArgs e)
@@ -25,11 +26,11 @@ namespace RM.Model
         }
         public override void btnSave_Click(object sender, EventArgs e)
         {
-
             string qry = "";
+
             if (id == 0) //insert
             {
-                qry = "Insert into Staff values(@Name, @phone, @role)";
+                qry = "Insert into staff Values(@Name, @phone, @role)";
             }
             else //update
             {
@@ -42,6 +43,7 @@ namespace RM.Model
             ht.Add("@Name", txtName.Text);
             ht.Add("@phone", txtPhone.Text);
             ht.Add("@role", cbRole.Text);
+
             if (MainClass.SQl(qry, ht) > 0)
             {
                 guna2MessageDialog1.Show("Saved successfully....");
