@@ -1,8 +1,10 @@
-﻿using System;
+﻿using RM.Reports;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -34,13 +36,14 @@ namespace RM.Model
 
         private void LoadData()
         {
-            string qry = "select MainID, TableName, WaiterName, orderType, status, total from tblMain where status <> 'Pending' ";
+            string qry = @"Select MainID, TableName, WaiterName, orderType, status, total from tblMain where status <> 'Pending' ";
             ListBox lb = new ListBox();
             lb.Items.Add(dgvid);
             lb.Items.Add(dgvTable);
             lb.Items.Add(dgvWaiter);
             lb.Items.Add(dgvType);
             lb.Items.Add(dgvTotal);
+            lb.Items.Add(dgvStatus);
 
             MainClass.LoadData(qry, guna2DataGridView1, lb);
         }
@@ -68,9 +71,28 @@ namespace RM.Model
                
             }
 
-            if (guna2DataGridView1.CurrentCell.OwningColumn.Name == "dgvedel")
+            if (guna2DataGridView1.CurrentCell.OwningColumn.Name == "dgvdel")
             {
                 //print bill
+                MainID = Convert.ToInt32(guna2DataGridView1.CurrentRow.Cells["dgvid"].Value);
+                string qry = @"Select * from tblMain m inner join
+                                             tblDetails d on d.MainID = m.MainID inner join products p on p.pID = d.proID
+                                             Where m.MainID = " + MainID + " ";
+
+                SqlCommand cmd = new SqlCommand(qry, MainClass.con);
+                MainClass.con.Open();
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                MainClass.con.Close();
+                frmPrint frm = new frmPrint();
+                rptBill cr = new rptBill();
+
+                cr.SetDatabaseLogon("sa", "huynhtrongnguyen739904");
+                cr.SetDataSource(dt);
+                frm.crystalReportViewer1.ReportSource = cr;
+                frm.crystalReportViewer1.Refresh();
+                frm.Show();
             }
         }
     }
